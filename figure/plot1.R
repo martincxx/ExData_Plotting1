@@ -1,21 +1,15 @@
-##Previous Steps
-## Getting full dataset
-ig <- read.csv("./exp-data/household_power_consumption.txt", header=T, sep=';', na.strings="?", 
-               nrows=2075259, check.names=F, stringsAsFactors=F, comment.char="", quote='\"')
-ig$Date <- as.Date(ig$Date, format="%d/%m/%Y")
 
-## Subsetting the data
-meow <- subset(ig, subset=(Date >= "2007-02-01" & Date <= "2007-02-02"))
-rm(ig)
+#download and unzip file
+download.file("https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2Fhousehold_power_consumption.zip", destfile="data.zip", method="curl")
+unzip ("data.zip", exdir = "./")
 
-## Converting dates
-hello_ig <- paste(as.Date(meow$Date), meow$Time)
-meow$Datetime <- as.POSIXct(hello_ig)
+#read data
+data_full <- read.table("household_power_consumption.txt", header=TRUE, na.strings="?", sep=";")
+data <- data_full[(data_full$Date=="1/2/2007" | data_full$Date=="2/2/2007" ), ]
 
 ## Plot 1
-hist(meow$Global_active_power, main="Global Active Power", 
-     xlab="Global Active Power (kilowatts)", ylab="Frequency", col="Red")
+hist(data$Global_active_power, main="Global Active Power", xlab="Global Active Power (kilowatts)", ylab="Frequency", col="Red", cex.sub=0.8)
 
-## Saving to file
-dev.copy(png, file="./exp-data/ExData_Plotting1/project/plot1.png", height=480, width=480)
+## export file
+dev.copy(png, file="plot1.png", height=480, width=480)
 dev.off()
